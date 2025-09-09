@@ -1,5 +1,5 @@
 import { createBrowserClient, createServerClient } from "@supabase/ssr"
-import { cookies } from "next/headers"
+import { headers, cookies } from "next/headers"
 
 const supabaseUrl = "https://easvluujwstcbymyxrsx.supabase.co" // 👈 CAMBIA ESTA URL
 const supabaseAnonKey =
