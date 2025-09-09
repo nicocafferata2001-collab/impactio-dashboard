@@ -1,15 +1,16 @@
-import { createBrowserClient, createServerClient } from "@supabase/ssr"
-import { headers, cookies } from "next/headers" // << ESTA LÍNEA ES CLAVE
+"use server"
 
-const supabaseUrl = "https://easvluujwstcbymyxrsx.supabase.co"
+import { createBrowserClient, createServerClient } from "@supabase/ssr"
+import { headers, cookies } from "next/headers"
+
+const supabaseUrl = "https://easvluujwstcbymyxrsx.supabase.co" // 👈 NO BORRES ESTO
 const supabaseAnonKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhc3ZsdXVqd3N0Y2J5bXl4cnN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1NTQ0NDYsImV4cCI6MjA3MTEzMDQ0Nn0.FDAv-GTiAu1vB1pisXTJxhRKH45z9YzfNhjdI7VgvaA"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhc3ZsdXVqd3N0Y2J5bXl4cnN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1NTQ0NDYsImV4cCI6MjA3MTEzMDQ0Nn0.FDAv-GTiAu1vB1pisXTJxhRKH45z9YzfNhjdI7VgvaA" // 👈 NO BORRES ESTO
 
 export function createClient() {
   return createBrowserClient(supabaseUrl, supabaseAnonKey)
 }
 
-// << AÑADE ESTA FUNCIÓN COMPLETA
 export async function createServerSupabaseClient() {
   const cookieStore = await cookies()
 
