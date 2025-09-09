@@ -25,8 +25,15 @@ export async function middleware(request: NextRequest) {
     },
   )
 
-  // Refreshing the auth token
-  await supabase.auth.getUser()
+  // Aquí está el cambio clave:
+  const { data: { session } } = await supabase.auth.getSession()
+
+  // Si el usuario no está autenticado y está tratando de acceder al dashboard
+  if (!session && request.nextUrl.pathname.startsWith('/dashboard')) {
+    const redirectUrl = request.nextUrl.clone()
+    redirectUrl.pathname = '/'
+    return NextResponse.redirect(redirectUrl)
+  }
 
   return supabaseResponse
 }
