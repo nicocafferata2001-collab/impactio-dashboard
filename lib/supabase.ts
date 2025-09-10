@@ -8,6 +8,7 @@ export function createClient() {
   return createBrowserClient(supabaseUrl, supabaseAnonKey)
 }
 
+// Aquí está la función que necesitas mantener. Asegúrate de que solo aparezca una vez.
 export async function createServerClient() {
   const cookieStore = cookies()
 
