@@ -1,14 +1,21 @@
 import { createServerClient } from "@/lib/supabase"
+import { redirect } from "next/navigation"
 import { MetricsCards } from "@/components/dashboard/metrics-cards"
 import { LeadsChart } from "@/components/dashboard/leads-chart"
 import { LeadsTable } from "@/components/dashboard/leads-table"
 import { Button } from "@/components/ui/button"
-import { Settings } from "lucide-react"
+import { LogOut, Settings } from "lucide-react"
 
 export default async function DashboardPage() {
   const supabase = await createServerClient()
-  // El usuario ya no es necesario, ya que eliminamos la autenticación.
-  const user = { email: "usuario de prueba" }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect("/")
+  }
 
   // Obtener leads
   const { data: leads, error: leadsError } = await supabase
@@ -33,8 +40,12 @@ export default async function DashboardPage() {
   const qualifiedLeads = leadsData.filter((lead) => lead.status === "qualified" || lead.status === "proposal").length
   const conversionRate = totalLeads > 0 ? Math.round((qualifiedLeads / totalLeads) * 100) : 0
 
-  // El botón de "logout" ya no es necesario
-  const handleLogout = async () => {}
+  const handleLogout = async () => {
+    "use server"
+    const supabase = await createServerClient()
+    await supabase.auth.signOut()
+    redirect("/")
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
