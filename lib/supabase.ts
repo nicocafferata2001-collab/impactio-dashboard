@@ -1,30 +1,33 @@
-import { createBrowserClient, createServerClient } from '@supabase/ssr'
-import { cookies } from "next/headers"
+"use server"
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+import { createBrowserClient, createServerClient } from "@supabase/ssr"
+import { headers, cookies } from "next/headers"
 
-export function createClient() {
-  return createBrowserClient(supabaseUrl, supabaseAnonKey)
+const supabaseUrl = "https://easvluujwstcbymyxrsx.supabase.co" // 👈 NO BORRES ESTO
+const supabaseAnonKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhc3ZsdXVqd3N0Y2J5bXl4cnN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU1NTQ0NDYsImV4cCI6MjA3MTEzMDQ0Nn0.FDAv-GTiAu1vB1pisXTJxhRKH45z9YzfNhjdI7VgvaA" // 👈 NO BORRES ESTO
+
+export async function createClient() {
+  return createBrowserClient(supabaseUrl, supabaseAnonKey)
 }
 
-// Aquí está la función que necesitas mantener. Asegúrate de que solo aparezca una vez.
-export async function createServerClient() {
-  const cookieStore = cookies()
+export async function createServerSupabaseClient() {
+  const cookieStore = await cookies()
 
-  return createServerClient(supabaseUrl, supabaseAnonKey, {
-    cookies: {
-      getAll() {
-        return cookieStore.getAll()
-      },
-      setAll(cookiesToSet) {
-        try {
-          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options))
-        } catch {
-          // El método `setAll` fue llamado desde un componente de servidor.
-          // Esto puede ser ignorado si tienes un middleware que refresca la sesión.
-        }
-      },
-    },
-  })
+  return createServerClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll()
+      },
+      setAll(cookiesToSet) {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options))
+        } catch {
+          // The `setAll` method was called from a Server Component.
+          // This can be ignored if you have middleware refreshing
+          // user sessions.
+        }
+      },
+    },
+  })
 }
